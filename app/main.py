@@ -6,6 +6,9 @@ from app.database import engine, Base
 # Import all models to register them with SQLAlchemy
 from app.models import User, Account, Transaction, Card, Statement
 
+# Import API routes
+from app.api import auth, accounts
+
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
@@ -24,6 +27,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include API routes
+app.include_router(auth.router, prefix=settings.api_v1_str)
+app.include_router(accounts.router, prefix=settings.api_v1_str)
 
 
 @app.get("/")
