@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking API Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .demo-section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .demo-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: "🔐";
+            font-size: 1.2em;
+        }
+
+        .auth-section .section-title::before { content: "🔐"; }
+        .account-section .section-title::before { content: "🏦"; }
+        .transaction-section .section-title::before { content: "💰"; }
+        .card-section .section-title::before { content: "💳"; }
+        .statement-section .section-title::before { content: "📊"; }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .response-area {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .token-display {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+
+        .demo-steps {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .demo-steps ol {
+            margin-left: 20px;
+        }
+
+        .demo-steps li {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Banking REST API Demo</h1>
+            <p>Complete Banking System with Authentication, Transactions, Cards & Statements</p>
+        </div>
+
+        <div class="demo-section auth-section">
+            <h2 class="section-title">Authentication</h2>
+            <div class="demo-steps">
+                <h4>Demo Steps:</h4>
+                <ol>
+                    <li>Sign up a new user account</li>
+                    <li>Login to get JWT token</li>
+                    <li>Use the token for authenticated requests</li>
+                </ol>
+            </div>
+            
+            <div class="grid">
+                <div>
+                    <h4>Sign Up</h4>
+                    <div class="form-group">
+                        <label>First Name:</label>
+                        <input type="text" id="signupFirstName" value="John">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        <input type="text" id="signupLastName" value="Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="signupEmail" value="john.doe@demo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="signupPassword" value="demo123">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="text" id="signupPhone" value="+1234567890">
+                    </div>
+                    <button class="btn" onclick="signup()">Sign Up</button>
+                </div>
+                
+                <div>
+                    <h4>Login</h4>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="loginEmail" value="john.doe@demo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="loginPassword" value="demo123">
+                    </div>
+                    <button class="btn" onclick="login()">Login</button>
+                    
+                    <div id="tokenDisplay" class="token-display" style="display: none;">
+                        <strong>JWT Token:</strong><br>
+                        <span id="tokenText"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="authResponse" class="response-area" style="display: none;"></div>
+        </div>
+
+        <div class="demo-section account-section">
+            <h2 class="section-title">Account Management</h2>
+            <div class="demo-steps">
+                <h4>Demo Steps:</h4>
+                <ol>
+                    <li>Create a new bank account</li>
+                    <li>List all user accounts</li>
+                    <li>View account details</li>
+                </ol>
+            </div>
+            
+            <div class="grid">
+                <div>
+                    <h4>Create Account</h4>
+                    <div class="form-group">
+                        <label>Account Type:</label>
+                        <select id="accountType">
+                            <option value="checking">Checking</option>
+                            <option value="savings">Savings</option>
+                            <option value="money_market">Money Market</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Initial Deposit:</label>
+                        <input type="number" id="initialDeposit" value="1000" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Currency:</label>
+                        <select id="currency">
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="createAccount()">Create Account</button>
+                </div>
+                
+                <div>
+                    <h4>Account Operations</h4>
+                    <button class="btn btn-secondary" onclick="listAccounts()">List Accounts</button>
+                    <button class="btn btn-secondary" onclick="getAccountDetails()">Get Account Details</button>
+                    <div class="form-group">
+                        <label>Account ID (for details):</label>
+                        <input type="number" id="accountId" value="1">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="accountResponse" class="response-area" style="display: none;"></div>
+        </div>
+
+        <div class="demo-section transaction-section">
+            <h2 class="section-title">Transactions</h2>
+            <div class="demo-steps">
+                <h4>Demo Steps:</h4>
+                <ol>
+                    <li>Make a deposit to your account</li>
+                    <li>Make a withdrawal (if sufficient funds)</li>
+                    <li>Transfer money between accounts</li>
+                    <li>View transaction history</li>
+                </ol>
+            </div>
+            
+            <div class="grid">
+                <div>
+                    <h4>Create Transaction</h4>
+                    <div class="form-group">
+                        <label>Account ID:</label>
+                        <input type="number" id="transactionAccountId" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Transaction Type:</label>
+                        <select id="transactionType">
+                            <option value="deposit">Deposit</option>
+                            <option value="withdrawal">Withdrawal</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount:</label>
+                        <input type="number" id="transactionAmount" value="500" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input type="text" id="transactionDescription" value="Demo transaction">
+                    </div>
+                    <div class="form-group">
+                        <label>Reference:</label>
+                        <input type="text" id="transactionReference" value="DEMO001">
+                    </div>
+                    <button class="btn btn-success" onclick="createTransaction()">Create Transaction</button>
+                </div>
+                
+                <div>
+                    <h4>Transfer Money</h4>
+                    <div class="form-group">
+                        <label>From Account ID:</label>
+                        <input type="number" id="fromAccountId" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>To Account ID:</label>
+                        <input type="number" id="toAccountId" value="2">
+                    </div>
+                    <div class="form-group">
+                        <label>Amount:</label>
+                        <input type="number" id="transferAmount" value="100" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input type="text" id="transferDescription" value="Demo transfer">
+                    </div>
+                    <button class="btn btn-warning" onclick="transferMoney()">Transfer Money</button>
+                    
+                    <h4 style="margin-top: 20px;">View Transactions</h4>
+                    <button class="btn btn-secondary" onclick="listTransactions()">List Transactions</button>
+                </div>
+            </div>
+            
+            <div id="transactionResponse" class="response-area" style="display: none;"></div>
+        </div>
+
+        <div class="demo-section card-section">
+            <h2 class="section-title">Card Management</h2>
+            <div class="demo-steps">
+                <h4>Demo Steps:</h4>
+                <ol>
+                    <li>Issue a new card for your account</li>
+                    <li>List all your cards</li>
+                    <li>Update card status</li>
+                </ol>
+            </div>
+            
+            <div class="grid">
+                <div>
+                    <h4>Issue Card</h4>
+                    <div class="form-group">
+                        <label>Account ID:</label>
+                        <input type="number" id="cardAccountId" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Card Type:</label>
+                        <select id="cardType">
+                            <option value="debit">Debit</option>
+                            <option value="credit">Credit</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Daily Limit:</label>
+                        <input type="number" id="dailyLimit" value="1000" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly Limit:</label>
+                        <input type="number" id="monthlyLimit" value="5000" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="contactlessEnabled" checked>
+                            Contactless Enabled
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="internationalEnabled">
+                            International Enabled
+                        </label>
+                    </div>
+                    <button class="btn" onclick="issueCard()">Issue Card</button>
+                </div>
+                
+                <div>
+                    <h4>Card Operations</h4>
+                    <button class="btn btn-secondary" onclick="listCards()">List Cards</button>
+                    <button class="btn btn-secondary" onclick="listAccountCards()">List Account Cards</button>
+                    
+                    <h4 style="margin-top: 20px;">Update Card Status</h4>
+                    <div class="form-group">
+                        <label>Card ID:</label>
+                        <input type="number" id="cardId" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>New Status:</label>
+                        <select id="cardStatus">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="blocked">Blocked</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-warning" onclick="updateCardStatus()">Update Status</button>
+                </div>
+            </div>
+            
+            <div id="cardResponse" class="response-area" style="display: none;"></div>
+        </div>
+
+        <div class="demo-section statement-section">
+            <h2 class="section-title">Statements</h2>
+            <div class="demo-steps">
+                <h4>Demo Steps:</h4>
+                <ol>
+                    <li>Generate a statement for your account</li>
+                    <li>List all statements</li>
+                    <li>View detailed statement with transactions</li>
+                </ol>
+            </div>
+            
+            <div class="grid">
+                <div>
+                    <h4>Generate Statement</h4>
+                    <div class="form-group">
+                        <label>Account ID:</label>
+                        <input type="number" id="statementAccountId" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date:</label>
+                        <input type="date" id="startDate" value="2025-08-01">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date:</label>
+                        <input type="date" id="endDate" value="2025-08-17">
+                    </div>
+                    <button class="btn" onclick="generateStatement()">Generate Statement</button>
+                </div>
+                
+                <div>
+                    <h4>Statement Operations</h4>
+                    <button class="btn btn-secondary" onclick="listStatements()">List Statements</button>
+                    
+                    <h4 style="margin-top: 20px;">View Statement Details</h4>
+                    <div class="form-group">
+                        <label>Statement ID:</label>
+                        <input type="number" id="statementId" value="1">
+                    </div>
+                    <button class="btn btn-secondary" onclick="getStatementDetails()">Get Details</button>
+                </div>
+            </div>
+            
+            <div id="statementResponse" class="response-area" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        let currentToken = '';
+
+        // Utility functions
+        function showResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.textContent = JSON.stringify(data, null, 2);
+            element.className = `response-area ${isError ? 'error' : 'success'}`;
+        }
+
+        function showStatus(message, type = 'info') {
+            const status = document.createElement('div');
+            status.className = `status ${type}`;
+            status.textContent = message;
+            document.body.insertBefore(status, document.body.firstChild);
+            setTimeout(() => status.remove(), 5000);
+        }
+
+        // Authentication functions
+        async function signup() {
+            const data = {
+                first_name: document.getElementById('signupFirstName').value,
+                last_name: document.getElementById('signupLastName').value,
+                email: document.getElementById('signupEmail').value,
+                password: document.getElementById('signupPassword').value,
+                phone: document.getElementById('signupPhone').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                showResponse('authResponse', result, !response.ok);
+                if (response.ok) {
+                    showStatus('User created successfully!', 'success');
+                }
+            } catch (error) {
+                showResponse('authResponse', { error: error.message }, true);
+            }
+        }
+
+        async function login() {
+            const data = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                showResponse('authResponse', result, !response.ok);
+                if (response.ok) {
+                    currentToken = result.token.access_token;
+                    document.getElementById('tokenText').textContent = currentToken;
+                    document.getElementById('tokenDisplay').style.display = 'block';
+                    showStatus('Login successful! Token saved.', 'success');
+                }
+            } catch (error) {
+                showResponse('authResponse', { error: error.message }, true);
+            }
+        }
+
+        // Account functions
+        async function createAccount() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const data = {
+                account_type: document.getElementById('accountType').value,
+                initial_deposit: parseFloat(document.getElementById('initialDeposit').value),
+                currency: document.getElementById('currency').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/accounts/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                showResponse('accountResponse', result, !response.ok);
+                if (response.ok) {
+                    showStatus('Account created successfully!', 'success');
+                }
+            } catch (error) {
+                showResponse('accountResponse', { error: error.message }, true);
+            }
+        }
+
+        async function listAccounts() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/accounts/`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const result = await response.json();
+                showResponse('accountResponse', result, !response.ok);
+            } catch (error) {
+                showResponse('accountResponse', { error: error.message }, true);
+            }
+        }
+
+        async function getAccountDetails() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const accountId = document.getElementById('accountId').value;
+            try {
+                const response = await fetch(`${API_BASE}/accounts/${accountId}`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const result = await response.json();
+                showResponse('accountResponse', result, !response.ok);
+            } catch (error) {
+                showResponse('accountResponse', { error: error.message }, true);
+            }
+        }
+
+        // Transaction functions
+        async function createTransaction() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const data = {
+                account_id: parseInt(document.getElementById('transactionAccountId').value),
+                transaction_type: document.getElementById('transactionType').value,
+                amount: parseFloat(document.getElementById('transactionAmount').value),
+                description: document.getElementById('transactionDescription').value,
+                reference: document.getElementById('transactionReference').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/transactions/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                showResponse('transactionResponse', result, !response.ok);
+                if (response.ok) {
+                    showStatus('Transaction created successfully!', 'success');
+                }
+            } catch (error) {
+                showResponse('transactionResponse', { error: error.message }, true);
+            }
+        }
+
+        async function transferMoney() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const data = {
+                from_account_id: parseInt(document.getElementById('fromAccountId').value),
+                to_account_id: parseInt(document.getElementById('toAccountId').value),
+                amount: parseFloat(document.getElementById('transferAmount').value),
+                description: document.getElementById('transferDescription').value,
+                reference: 'TRANSFER'
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/transactions/transfer`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                showResponse('transactionResponse', result, !response.ok);
+                if (response.ok) {
+                    showStatus('Transfer completed successfully!', 'success');
+                }
+            } catch (error) {
+                showResponse('transactionResponse', { error: error.message }, true);
+            }
+        }
+
+        async function listTransactions() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const accountId = document.getElementById('transactionAccountId').value;
+            try {
+                const response = await fetch(`${API_BASE}/transactions/account/${accountId}`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const result = await response.json();
+                showResponse('transactionResponse', result, !response.ok);
+            } catch (error) {
+                showResponse('transactionResponse', { error: error.message }, true);
+            }
+        }
+
+        // Card functions
+        async function issueCard() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const data = {
+                account_id: parseInt(document.getElementById('cardAccountId').value),
+                card_type: document.getElementById('cardType').value,
+                daily_limit: parseFloat(document.getElementById('dailyLimit').value),
+                monthly_limit: parseFloat(document.getElementById('monthlyLimit').value),
+                is_contactless_enabled: document.getElementById('contactlessEnabled').checked,
+                is_international_enabled: document.getElementById('internationalEnabled').checked
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/cards/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                showResponse('cardResponse', result, !response.ok);
+                if (response.ok) {
+                    showStatus('Card issued successfully!', 'success');
+                }
+            } catch (error) {
+                showResponse('cardResponse', { error: error.message }, true);
+            }
+        }
+
+        async function listCards() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/cards/`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const result = await response.json();
+                showResponse('cardResponse', result, !response.ok);
+            } catch (error) {
+                showResponse('cardResponse', { error: error.message }, true);
+            }
+        }
+
+        async function listAccountCards() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const accountId = document.getElementById('cardAccountId').value;
+            try {
+                const response = await fetch(`${API_BASE}/cards/account/${accountId}`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const result = await response.json();
+                showResponse('cardResponse', result, !response.ok);
+            } catch (error) {
+                showResponse('cardResponse', { error: error.message }, true);
+            }
+        }
+
+        async function updateCardStatus() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const cardId = document.getElementById('cardId').value;
+            const data = {
+                status: document.getElementById('cardStatus').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/cards/${cardId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                showResponse('cardResponse', result, !response.ok);
+                if (response.ok) {
+                    showStatus('Card status updated successfully!', 'success');
+                }
+            } catch (error) {
+                showResponse('cardResponse', { error: error.message }, true);
+            }
+        }
+
+        // Statement functions
+        async function generateStatement() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const data = {
+                account_id: parseInt(document.getElementById('statementAccountId').value),
+                start_date: document.getElementById('startDate').value,
+                end_date: document.getElementById('endDate').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/statements/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                showResponse('statementResponse', result, !response.ok);
+                if (response.ok) {
+                    showStatus('Statement generated successfully!', 'success');
+                }
+            } catch (error) {
+                showResponse('statementResponse', { error: error.message }, true);
+            }
+        }
+
+        async function listStatements() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const accountId = document.getElementById('statementAccountId').value;
+            try {
+                const response = await fetch(`${API_BASE}/statements/account/${accountId}`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const result = await response.json();
+                showResponse('statementResponse', result, !response.ok);
+            } catch (error) {
+                showResponse('statementResponse', { error: error.message }, true);
+            }
+        }
+
+        async function getStatementDetails() {
+            if (!currentToken) {
+                showStatus('Please login first!', 'error');
+                return;
+            }
+
+            const statementId = document.getElementById('statementId').value;
+            try {
+                const response = await fetch(`${API_BASE}/statements/${statementId}`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const result = await response.json();
+                showResponse('statementResponse', result, !response.ok);
+            } catch (error) {
+                showResponse('statementResponse', { error: error.message }, true);
+            }
+        }
+    </script>
+</body>
+</html>
