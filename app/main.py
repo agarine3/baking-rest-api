@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
 
+# Import all models to register them with SQLAlchemy
+from app.models import User, Account, Transaction, Card, Statement
+
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
