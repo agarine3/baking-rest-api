@@ -7,7 +7,7 @@ from app.database import engine, Base
 from app.models import User, Account, Transaction, Card, Statement
 
 # Import API routes
-from app.api import auth, accounts
+from app.api import auth, accounts, transactions, cards, statements
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -31,6 +31,9 @@ app.add_middleware(
 # Include API routes
 app.include_router(auth.router, prefix=settings.api_v1_str)
 app.include_router(accounts.router, prefix=settings.api_v1_str)
+app.include_router(transactions.router, prefix=settings.api_v1_str)
+app.include_router(cards.router, prefix=settings.api_v1_str)
+app.include_router(statements.router, prefix=settings.api_v1_str)
 
 
 @app.get("/")

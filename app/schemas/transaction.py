@@ -7,12 +7,11 @@ from app.models import TransactionType, TransactionStatus
 
 class TransactionCreateRequest(BaseModel):
     """Schema for transaction creation request."""
+    account_id: int = Field(..., description="Account ID")
     transaction_type: TransactionType = Field(..., description="Type of transaction")
     amount: Decimal = Field(..., gt=0, description="Transaction amount")
     description: Optional[str] = Field(None, max_length=255, description="Transaction description")
-    reference_number: Optional[str] = Field(None, max_length=50, description="Reference number")
-    merchant_name: Optional[str] = Field(None, max_length=100, description="Merchant name")
-    merchant_category: Optional[str] = Field(None, max_length=50, description="Merchant category")
+    reference: Optional[str] = Field(None, max_length=50, description="Reference number")
 
 
 class TransferRequest(BaseModel):
@@ -21,7 +20,7 @@ class TransferRequest(BaseModel):
     to_account_id: int = Field(..., description="Destination account ID")
     amount: Decimal = Field(..., gt=0, description="Transfer amount")
     description: Optional[str] = Field(None, max_length=255, description="Transfer description")
-    reference_number: Optional[str] = Field(None, max_length=50, description="Reference number")
+    reference: Optional[str] = Field(None, max_length=50, description="Reference number")
 
 
 class TransactionResponse(BaseModel):
@@ -30,21 +29,16 @@ class TransactionResponse(BaseModel):
     transaction_id: str
     transaction_type: TransactionType
     status: TransactionStatus
-    amount: Decimal
+    amount: str
     currency: str
-    fee: Decimal
+    fee: str
     account_id: int
-    from_account_id: Optional[int]
-    to_account_id: Optional[int]
-    description: Optional[str]
-    reference_number: Optional[str]
-    merchant_name: Optional[str]
-    merchant_category: Optional[str]
-    balance_before: Optional[Decimal]
-    balance_after: Optional[Decimal]
+    from_account_id: Optional[int] = None
+    to_account_id: Optional[int] = None
+    description: Optional[str] = None
+    reference: Optional[str] = None
     created_at: datetime
-    processed_at: Optional[datetime]
-    settled_at: Optional[datetime]
+    message: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -54,7 +48,6 @@ class TransactionListResponse(BaseModel):
     """Schema for transaction list response."""
     transactions: list[TransactionResponse]
     total_count: int
-    total_amount: Decimal
     message: str = Field(default="Transactions retrieved successfully")
 
 

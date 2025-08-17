@@ -6,6 +6,7 @@ from decimal import Decimal
 
 class StatementRequest(BaseModel):
     """Schema for statement request."""
+    account_id: int = Field(..., description="Account ID")
     start_date: date = Field(..., description="Start date for statement period")
     end_date: date = Field(..., description="End date for statement period")
     include_transactions: bool = Field(default=True, description="Include transaction details")
@@ -15,22 +16,22 @@ class StatementResponse(BaseModel):
     """Schema for statement response."""
     id: int
     statement_number: str
-    statement_period_start: datetime
-    statement_period_end: datetime
+    statement_period_start: date
+    statement_period_end: date
     account_id: int
-    opening_balance: Decimal
-    closing_balance: Decimal
-    total_deposits: Decimal
-    total_withdrawals: Decimal
-    total_fees: Decimal
-    total_interest: Decimal
-    total_transactions: int
-    deposits_count: int
-    withdrawals_count: int
+    opening_balance: str
+    closing_balance: str
+    total_deposits: str
+    total_withdrawals: str
+    total_transfers_in: str
+    total_transfers_out: str
+    total_fees: str
+    total_interest: str
+    transaction_count: int
     currency: str
-    net_change: Decimal
+    is_generated: bool
     created_at: datetime
-    generated_at: Optional[datetime]
+    message: Optional[str] = None
 
     class Config:
         from_attributes = True

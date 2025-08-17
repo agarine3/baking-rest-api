@@ -7,9 +7,8 @@ from app.models import CardType, CardStatus
 
 class CardCreateRequest(BaseModel):
     """Schema for card creation request."""
+    account_id: int = Field(..., description="Linked account ID")
     card_type: CardType = Field(..., description="Type of card to create")
-    cardholder_name: str = Field(..., max_length=100, description="Name on the card")
-    account_id: Optional[int] = Field(None, description="Linked account ID for debit cards")
     daily_limit: Optional[Decimal] = Field(1000.00, ge=0, description="Daily spending limit")
     monthly_limit: Optional[Decimal] = Field(10000.00, ge=0, description="Monthly spending limit")
     credit_limit: Optional[Decimal] = Field(None, ge=0, description="Credit limit for credit cards")
@@ -26,17 +25,16 @@ class CardResponse(BaseModel):
     cardholder_name: str
     expiry_month: int
     expiry_year: int
+    is_pin_set: bool
     is_contactless_enabled: bool
     is_international_enabled: bool
-    daily_limit: Decimal
-    monthly_limit: Decimal
-    credit_limit: Optional[Decimal]
+    daily_limit: str
+    monthly_limit: str
+    credit_limit: Optional[str]
     user_id: int
     account_id: Optional[int]
     created_at: datetime
-    updated_at: Optional[datetime]
-    last_used: Optional[datetime]
-    is_expired: bool
+    message: Optional[str] = None
 
     class Config:
         from_attributes = True
