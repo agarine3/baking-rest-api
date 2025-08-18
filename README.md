@@ -2,14 +2,6 @@
 
 A complete banking system built with FastAPI, SQLAlchemy, and JWT authentication. This project demonstrates AI-driven development practices to create a production-ready banking API in just 1 hour.
 
-## 🎬 Demo Video
-
-**Demo Video Link:** [Add your video link here]
-- Complete walkthrough of all banking features
-- Authentication, account management, transactions, cards, and statements
-- Edge cases and security demonstrations
-- API documentation showcase
-
 ## 🚀 Features
 
 ### Core Banking Services

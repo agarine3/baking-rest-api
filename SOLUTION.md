@@ -315,19 +315,6 @@ pytest -v
 - Balance and transaction totals
 - Generation status
 
-## 🎬 Demo Video
-
-**Demo Video Link:** [Add your video link here]
-
-The demo video showcases:
-- Complete user registration and authentication flow
-- Account creation and management
-- Transaction processing (deposits, withdrawals, transfers)
-- Card issuance and management
-- Statement generation
-- Edge cases and error handling
-- API documentation and testing
-
 ## 🤖 AI-Driven Development
 
 ### AI Tools Used
