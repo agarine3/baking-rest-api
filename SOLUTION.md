@@ -1,164 +1,397 @@
-# Banking REST API - Solution
+# 🏦 Banking REST API - Solution Documentation
 
-## Project Overview
+## 📋 Project Overview
 
-This is a comprehensive banking REST API built with FastAPI, SQLAlchemy, and JWT authentication. The project demonstrates modern Python development practices with a focus on security, scalability, and maintainability.
+This is a complete banking REST API built using AI-driven development practices. The system provides all core banking functionalities including user authentication, account management, transaction processing, card management, and statement generation.
 
-## Technology Stack
+## 🎯 Requirements Fulfillment
 
-- **Framework**: FastAPI 0.116.1
-- **Database**: SQLite with SQLAlchemy 2.0.43 ORM
-- **Authentication**: JWT tokens with python-jose
-- **Password Hashing**: bcrypt with passlib
-- **Database Migrations**: Alembic
-- **Testing**: pytest with pytest-asyncio
-- **Documentation**: Auto-generated with FastAPI
+### ✅ Core Components Implemented
 
-## Project Structure
+#### 1. Service Interface
+- **✅ User Signing up** - Complete user registration with validation
+- **✅ Authentication** - JWT-based secure authentication system
+- **✅ Account Holders** - User management with personal information
+- **✅ Accounts** - Bank account creation and management
+- **✅ Transactions** - Deposit, withdrawal, and transfer operations
+- **✅ Money Transfer** - Inter-account and inter-user transfers
+- **✅ Cards** - Debit and credit card issuance and management
+- **✅ Statements** - Monthly account statement generation
 
-```
-banking-api/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # FastAPI application entry point
-│   ├── config.py            # Configuration management
-│   ├── database.py          # Database connection and session
-│   ├── models/              # SQLAlchemy database models
-│   ├── schemas/             # Pydantic request/response models
-│   ├── api/                 # API route handlers
-│   ├── core/                # Core utilities
-│   └── utils/               # Helper functions
-├── tests/
-│   ├── __init__.py
-│   └── test_basic.py        # Basic functionality tests
-├── alembic/                 # Database migration files
-├── docs/                    # Documentation
-├── requirements.txt         # Python dependencies
-├── alembic.ini             # Alembic configuration
-├── .gitignore              # Git ignore rules
-├── env.example             # Environment variables template
-├── test_setup.py           # Setup verification script
-├── README.md               # Project overview
-├── SOLUTION.md             # This file
-└── AI_USAGE_LOG.md         # AI development log
-```
+#### 2. Database Implementation
+- **✅ SQLite Database** - File-based database for development
+- **✅ SQLAlchemy ORM** - Object-relational mapping with relationships
+- **✅ Alembic Migrations** - Database schema version control
+- **✅ Data Validation** - Comprehensive input/output validation
 
-## Setup Instructions
+## 🛠️ Technology Stack
+
+### Backend Framework
+- **FastAPI** - Modern, fast web framework with automatic documentation
+- **Python 3.11+** - Latest Python features and performance
+
+### Database & ORM
+- **SQLite** - Lightweight, file-based database
+- **SQLAlchemy 2.0** - Modern ORM with async support
+- **Alembic** - Database migration tool
+
+### Authentication & Security
+- **JWT (JSON Web Tokens)** - Stateless authentication
+- **bcrypt** - Secure password hashing
+- **python-jose** - JWT encoding/decoding
+
+### Data Validation
+- **Pydantic** - Data validation and settings management
+- **email-validator** - Email format validation
+
+### Testing & Development
+- **pytest** - Testing framework
+- **httpx** - HTTP client for testing
+- **uvicorn** - ASGI server
+
+## 🚀 Setup Instructions
 
 ### Prerequisites
+- Python 3.11 or higher
+- pip (Python package manager)
+- Git (for cloning the repository)
 
-- Python 3.13+
-- pip3
-
-### Installation
-
-1. **Clone the repository** (if not already done):
-   ```bash
-   git clone <repository-url>
-   cd Invisible-TakeHomeTest
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   pip3 install -r requirements.txt
-   ```
-
-3. **Set up environment variables**:
-   ```bash
-   cp env.example .env
-   # Edit .env file with your configuration
-   ```
-
-4. **Verify setup**:
-   ```bash
-   python3 test_setup.py
-   ```
-
-5. **Run database migrations** (when models are added):
-   ```bash
-   alembic upgrade head
-   ```
-
-6. **Start the development server**:
-   ```bash
-   uvicorn app.main:app --reload
-   ```
-
-7. **Access the API**:
-   - API Base URL: http://localhost:8000
-   - Interactive Documentation: http://localhost:8000/docs
-   - Alternative Documentation: http://localhost:8000/redoc
-
-### Testing
-
-Run the test suite:
+### Step 1: Clone the Repository
 ```bash
-python3 -m pytest tests/ -v
+git clone https://github.com/agarine3/baking-rest-api.git
+cd banking-rest-api
 ```
 
-## Current Status
+### Step 2: Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-### ✅ Completed
-- [x] Project scaffold and directory structure
-- [x] FastAPI application setup
-- [x] SQLAlchemy database configuration
-- [x] JWT authentication framework
-- [x] Alembic migration setup
-- [x] Basic health check endpoints
-- [x] Test framework setup
-- [x] Environment configuration
-- [x] Documentation structure
+### Step 3: Environment Configuration
+```bash
+# Copy the example environment file
+cp env.example .env
 
-### 🔄 Next Steps
-- [ ] Database models for banking entities
-- [ ] Authentication system implementation
-- [ ] API endpoints for core banking functions
-- [ ] Security middleware
-- [ ] Comprehensive test coverage
-- [ ] API documentation
+# Edit .env with your configuration
+# The default values should work for development
+```
 
-## API Endpoints
+### Step 4: Database Setup
+```bash
+# Run database migrations
+alembic upgrade head
+```
 
-### Current Endpoints
-- `GET /` - Welcome message
-- `GET /health` - Health check
-- `GET /api/v1/` - API root
+### Step 5: Start the Server
+```bash
+# Start the FastAPI server
+uvicorn app.main:app --reload --port 8000
+```
 
-### Planned Endpoints
-- `POST /api/v1/auth/signup` - User registration
-- `POST /api/v1/auth/login` - User authentication
-- `GET /api/v1/users/me` - Get current user
-- `GET /api/v1/accounts` - List user accounts
-- `POST /api/v1/accounts` - Create new account
-- `GET /api/v1/transactions` - List transactions
-- `POST /api/v1/transactions` - Create transaction
-- `POST /api/v1/transfers` - Money transfer
-- `GET /api/v1/cards` - List user cards
-- `GET /api/v1/statements` - Get account statements
+### Step 6: Access the Application
+- **API Documentation:** http://localhost:8000/docs
+- **Health Check:** http://localhost:8000/health
+- **Demo UI:** http://localhost:8080 (see demo setup below)
 
-## Security Considerations
+### Demo UI Setup
+```bash
+# In a new terminal
+cd demo
+python3 -m http.server 8080
+```
 
-- JWT tokens for authentication
-- bcrypt for password hashing
-- Environment variables for sensitive configuration
-- CORS middleware configured
-- Input validation with Pydantic
-- SQL injection protection with SQLAlchemy
+## 📚 API Documentation
 
-## Development Notes
+### Authentication Endpoints
 
-This project uses AI-driven development practices. See `AI_USAGE_LOG.md` for detailed information about AI tool usage during development.
+#### Register User
+```http
+POST /api/v1/auth/signup
+Content-Type: application/json
 
-## Troubleshooting
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example.com",
+  "password": "securepassword123",
+  "phone": "+1234567890"
+}
+```
 
-### Common Issues
+#### Login User
+```http
+POST /api/v1/auth/login
+Content-Type: application/json
 
-1. **Import errors**: Make sure all dependencies are installed with `pip3 install -r requirements.txt`
-2. **Database connection**: Ensure SQLite is available and the database file is writable
-3. **Port conflicts**: Change the port in the uvicorn command if 8000 is in use
+{
+  "email": "john.doe@example.com",
+  "password": "securepassword123"
+}
+```
 
-### Getting Help
+### Account Endpoints
 
-- Check the FastAPI documentation: https://fastapi.tiangolo.com/
-- Review the test output for specific error messages
-- Run `python3 test_setup.py` to verify the environment
+#### Create Account
+```http
+POST /api/v1/accounts/
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "account_type": "checking",
+  "initial_deposit": 1000.00,
+  "currency": "USD"
+}
+```
+
+#### List Accounts
+```http
+GET /api/v1/accounts/
+Authorization: Bearer <jwt_token>
+```
+
+#### Get Account Details
+```http
+GET /api/v1/accounts/{account_id}
+Authorization: Bearer <jwt_token>
+```
+
+### Transaction Endpoints
+
+#### Create Transaction
+```http
+POST /api/v1/transactions/
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "account_id": 1,
+  "transaction_type": "deposit",
+  "amount": 500.00,
+  "description": "Salary deposit",
+  "reference": "SAL001"
+}
+```
+
+#### Transfer Money
+```http
+POST /api/v1/transactions/transfer
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "from_account_id": 1,
+  "to_account_id": 2,
+  "amount": 100.00,
+  "description": "Transfer to savings"
+}
+```
+
+### Card Endpoints
+
+#### Issue Card
+```http
+POST /api/v1/cards/
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "account_id": 1,
+  "card_type": "debit",
+  "daily_limit": 1000.00,
+  "monthly_limit": 5000.00
+}
+```
+
+#### List Cards
+```http
+GET /api/v1/cards/
+Authorization: Bearer <jwt_token>
+```
+
+### Statement Endpoints
+
+#### Generate Statement
+```http
+POST /api/v1/statements/generate
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "account_id": 1,
+  "start_date": "2025-08-01",
+  "end_date": "2025-08-31"
+}
+```
+
+## 🔐 Security Considerations
+
+### Authentication & Authorization
+- **JWT Tokens**: Secure, stateless authentication with 30-minute expiration
+- **Password Security**: bcrypt hashing with configurable rounds
+- **Account Ownership**: Users can only access their own accounts
+- **Token Validation**: Comprehensive JWT token verification
+
+### Data Validation
+- **Input Validation**: Pydantic models for request/response validation
+- **SQL Injection Prevention**: SQLAlchemy ORM with parameterized queries
+- **XSS Protection**: Proper response handling and content types
+- **CORS Configuration**: Secure cross-origin resource sharing
+
+### Business Logic Security
+- **Transaction Validation**: Amount limits, account status checks
+- **Fund Availability**: Insufficient funds prevention
+- **Daily Limits**: Configurable transaction limits
+- **Account Status**: Active/inactive account validation
+
+## 🧪 Testing
+
+### Running Tests
+```bash
+# Run all tests
+pytest
+
+# Run specific test files
+pytest tests/test_basic.py
+pytest tests/test_models_simple.py
+
+# Run with verbose output
+pytest -v
+```
+
+### Test Coverage
+- **API Endpoints**: Basic functionality testing
+- **Database Models**: Model structure and relationships
+- **Authentication**: JWT token validation
+- **Data Validation**: Pydantic schema validation
+
+## 📊 Database Schema
+
+### Core Tables
+
+#### Users
+- `id` (Primary Key)
+- `first_name`, `last_name`
+- `email` (Unique)
+- `phone` (Unique)
+- `password_hash`
+- `is_active`, `is_verified`
+- Address fields
+- Timestamps
+
+#### Accounts
+- `id` (Primary Key)
+- `account_number` (Unique)
+- `routing_number`
+- `account_type` (Enum)
+- `balance`, `available_balance`
+- `currency`
+- `user_id` (Foreign Key)
+- Limits and status fields
+
+#### Transactions
+- `id` (Primary Key)
+- `transaction_id` (Unique)
+- `transaction_type` (Enum)
+- `amount`, `currency`
+- `account_id` (Foreign Key)
+- `from_account_id`, `to_account_id` (For transfers)
+- Status and metadata fields
+
+#### Cards
+- `id` (Primary Key)
+- `card_number` (Unique)
+- `card_type` (Enum)
+- `cardholder_name`
+- `expiry_month`, `expiry_year`
+- `user_id`, `account_id` (Foreign Keys)
+- Limits and security fields
+
+#### Statements
+- `id` (Primary Key)
+- `statement_number` (Unique)
+- `account_id` (Foreign Key)
+- `statement_period_start`, `statement_period_end`
+- Balance and transaction totals
+- Generation status
+
+## 🎬 Demo Video
+
+**Demo Video Link:** [Add your video link here]
+
+The demo video showcases:
+- Complete user registration and authentication flow
+- Account creation and management
+- Transaction processing (deposits, withdrawals, transfers)
+- Card issuance and management
+- Statement generation
+- Edge cases and error handling
+- API documentation and testing
+
+## 🤖 AI-Driven Development
+
+### AI Tools Used
+- **Cursor IDE**: AI-powered code editor for rapid development
+- **Claude**: Code generation, debugging, and problem solving
+- **ChatGPT**: Architecture design and best practices
+- **Various AI Tools**: Iterative development and optimization
+
+### Development Process
+1. **Project Setup**: AI-assisted repository and structure creation
+2. **Database Design**: AI-generated SQLAlchemy models with relationships
+3. **API Development**: AI-assisted endpoint implementation
+4. **Testing**: AI-generated test cases and validation
+5. **Documentation**: AI-assisted comprehensive documentation
+6. **Demo Creation**: AI-generated interactive demo interface
+
+### Challenges & Solutions
+- **Dependency Management**: Resolved Python package compatibility issues
+- **Database Relationships**: Fixed SQLAlchemy foreign key ambiguity
+- **API-Schema Alignment**: Synchronized Pydantic and SQLAlchemy models
+- **Error Handling**: Implemented comprehensive validation and error responses
+
+## 📈 Performance & Scalability
+
+### Current Implementation
+- **SQLite Database**: Suitable for development and small-scale deployment
+- **FastAPI**: High-performance async framework
+- **Efficient Queries**: Optimized SQLAlchemy ORM usage
+- **Proper Indexing**: Foreign key and unique constraint indexing
+
+### Production Considerations
+- **Database**: PostgreSQL for production with connection pooling
+- **Caching**: Redis for session and data caching
+- **Load Balancing**: Multiple server instances behind a load balancer
+- **Monitoring**: Application performance monitoring and logging
+- **Rate Limiting**: API rate limiting for security
+
+## 🎯 Future Enhancements
+
+### Planned Features
+- Multi-currency support
+- International transfers
+- Mobile app API endpoints
+- Webhook notifications
+- Advanced fraud detection
+- Real-time transaction monitoring
+
+### Technical Improvements
+- GraphQL API for flexible data querying
+- Microservices architecture
+- Event-driven architecture with message queues
+- Advanced caching strategies
+- Comprehensive logging and monitoring
+- Performance optimization
+
+## 📞 Support & Contact
+
+For questions, issues, or contributions:
+- **GitHub Repository**: https://github.com/agarine3/baking-rest-api
+- **Issues**: Create an issue on GitHub
+- **Documentation**: http://localhost:8000/docs (when running)
+
+## 📄 License
+
+This project is created for demonstration purposes as part of an AI-driven development assessment.
+
+---
